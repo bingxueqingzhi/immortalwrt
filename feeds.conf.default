@@ -6,5 +6,5 @@ src-git-full telephony https://github.com/openwrt/telephony.git;openwrt-21.02
 src-git openappfilter https://github.com/destan19/OpenAppFilter.git
 src-git homebox https://github.com/sirpdboy/netspeedtest.git
 src-git netmaker https://github.com/sbilly/netmaker-openwrt.git
-src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git
+src-git kiddin9 https://github.com/kenzok8/openwrt-packages.git
 #src-git kenzok8 https://github.com/kenzok8/small-package.git
