@@ -105,6 +105,30 @@ define Build/cetron-header
 	rm $@.tmp
 endef
 
+define Device/abt_asr3000
+  DEVICE_VENDOR := ABT
+  DEVICE_MODEL := ASR3000
+  DEVICE_DTS := mt7981b-abt-asr3000
+  DEVICE_DTS_DIR := ../dts
+  DEVICE_PACKAGES := kmod-mt7981-firmware mt7981-wo-firmware
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  KERNEL_IN_UBI := 1
+  UBOOTENV_IN_UBI := 1
+  IMAGES := sysupgrade.itb
+  KERNEL_INITRAMFS_SUFFIX := -recovery.itb
+  KERNEL := kernel-bin | gzip
+  KERNEL_INITRAMFS := kernel-bin | lzma | \
+        fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
+  IMAGE/sysupgrade.itb := append-kernel | \
+        fit gzip $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb external-static-with-rootfs | append-metadata
+  ARTIFACTS := preloader.bin bl31-uboot.fip
+  ARTIFACT/preloader.bin := mt7981-bl2 spim-nand-ddr3
+  ARTIFACT/bl31-uboot.fip := mt7981-bl31-uboot abt_asr3000
+endef
+TARGET_DEVICES += abt_asr3000
+
 define Device/abt_asr3000-ubootmod
   DEVICE_VENDOR := ABT
   DEVICE_MODEL := ASR3000 (custom U-Boot layout)
@@ -159,6 +183,43 @@ define Device/acer_predator-w6
 endef
 TARGET_DEVICES += acer_predator-w6
 
+define Device/adtran_smartrg
+  DEVICE_VENDOR := Adtran
+  DEVICE_DTS_DIR := ../dts
+  DEVICE_PACKAGES := e2fsprogs f2fsck mkf2fs kmod-hwmon-pwmfan \
+		     kmod-mt7986-firmware mt7986-wo-firmware
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+
+define Device/smartrg_sdg-8612
+$(call Device/adtran_smartrg)
+  DEVICE_MODEL := SDG-8612
+  DEVICE_DTS := mt7986a-smartrg-SDG-8612
+endef
+TARGET_DEVICES += smartrg_sdg-8612
+
+define Device/smartrg_sdg-8614
+$(call Device/adtran_smartrg)
+  DEVICE_MODEL := SDG-8614
+  DEVICE_DTS := mt7986a-smartrg-SDG-8614
+endef
+TARGET_DEVICES += smartrg_sdg-8614
+
+define Device/smartrg_sdg-8622
+$(call Device/adtran_smartrg)
+  DEVICE_MODEL := SDG-8622
+  DEVICE_DTS := mt7986a-smartrg-SDG-8622
+  DEVICE_PACKAGES += kmod-mt7915-firmware
+endef
+TARGET_DEVICES += smartrg_sdg-8622
+
+define Device/smartrg_sdg-8632
+$(call Device/adtran_smartrg)
+  DEVICE_MODEL := SDG-8632
+  DEVICE_DTS := mt7986a-smartrg-SDG-8632
+  DEVICE_PACKAGES += kmod-mt7915-firmware
+endef
+TARGET_DEVICES += smartrg_sdg-8632
 
 define Device/asus_rt-ax59u
   DEVICE_VENDOR := ASUS
@@ -422,6 +483,30 @@ define Device/cmcc_rax3000m-nand-ubootmod
 endef
 TARGET_DEVICES += cmcc_rax3000m-nand-ubootmod
 
+define Device/comfast_cf-e393ax
+  DEVICE_VENDOR := Comfast
+  DEVICE_MODEL := CF-E393AX
+  DEVICE_DTS := mt7981a-comfast-cf-e393ax
+  DEVICE_DTS_DIR := ../dts
+  DEVICE_DTC_FLAGS := --pad 4096
+  DEVICE_DTS_LOADADDR := 0x43f00000
+  DEVICE_PACKAGES := kmod-mt7981-firmware mt7981-wo-firmware
+  KERNEL_LOADADDR := 0x44000000
+  KERNEL = kernel-bin | lzma | \
+       fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
+  KERNEL_INITRAMFS = kernel-bin | lzma | \
+       fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  IMAGE_SIZE := 65536k
+  KERNEL_IN_UBI := 1
+  IMAGES := sysupgrade.bin factory.bin
+  IMAGE/factory.bin := append-ubi | check-size $$$$(IMAGE_SIZE)
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += comfast_cf-e393ax
+
 define Device/confiabits_mt7981
   DEVICE_VENDOR := Confiabits
   DEVICE_MODEL := MT7981
@@ -492,6 +577,21 @@ define Device/cudy_wr3000-v1
   DEVICE_PACKAGES := kmod-mt7981-firmware mt7981-wo-firmware
 endef
 TARGET_DEVICES += cudy_wr3000-v1
+
+define Device/dlink_aquila-pro-ai-m30-a1
+  DEVICE_VENDOR := D-Link
+  DEVICE_MODEL := AQUILA PRO AI M30
+  DEVICE_VARIANT := A1
+  DEVICE_DTS := mt7981b-dlink-aquila-pro-ai-m30-a1
+  DEVICE_DTS_DIR := ../dts
+  DEVICE_PACKAGES := kmod-leds-gca230718 kmod-mt7981-firmware mt7981-wo-firmware
+  KERNEL_IN_UBI := 1
+  IMAGES += recovery.bin
+  IMAGE_SIZE := 51200k
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+  IMAGE/recovery.bin := sysupgrade-tar | pad-to $$(IMAGE_SIZE) | dlink-ai-recovery-header DLK6E6110001 \x6A\x28\xEE\x0B \x00\x00\x2C\x00 \x00\x00\x20\x03 \x61\x6E
+endef
+TARGET_DEVICES += dlink_aquila-pro-ai-m30-a1
 
 define Device/glinet_gl-mt2500
   DEVICE_VENDOR := GL.iNet
@@ -1295,6 +1395,24 @@ endif
 endef
 TARGET_DEVICES += xiaomi_redmi-router-ax6000-ubootmod
 
+define Device/yuncore_ax835
+  DEVICE_VENDOR := YunCore
+  DEVICE_MODEL := AX835
+  DEVICE_DTS := mt7981b-yuncore-ax835
+  DEVICE_DTS_DIR := ../dts
+  DEVICE_DTS_LOADADDR := 0x47000000
+  IMAGES := sysupgrade.bin
+  IMAGE_SIZE := 14336k
+  SUPPORTED_DEVICES += mediatek,mt7981-spim-nor-rfb
+  KERNEL := kernel-bin | lzma | \
+	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
+  KERNEL_INITRAMFS := kernel-bin | lzma | \
+	fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
+  IMAGE/sysupgrade.bin := append-kernel | pad-to 128k | append-rootfs | pad-rootfs | check-size | append-metadata
+  DEVICE_PACKAGES := kmod-mt7981-firmware mt7981-wo-firmware
+endef
+TARGET_DEVICES += yuncore_ax835
+
 define Device/zbtlink_zbt-z8102ax
   DEVICE_VENDOR := Zbtlink
   DEVICE_MODEL := ZBT-Z8102AX
@@ -1312,6 +1430,23 @@ define Device/zbtlink_zbt-z8102ax
   IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
 endef
 TARGET_DEVICES += zbtlink_zbt-z8102ax
+
+define Device/zbtlink_zbt-z8103ax
+  DEVICE_VENDOR := Zbtlink
+  DEVICE_MODEL := ZBT-Z8103AX
+  DEVICE_DTS := mt7981b-zbtlink-zbt-z8103ax
+  DEVICE_DTS_DIR := ../dts
+  DEVICE_PACKAGES := kmod-mt7981-firmware mt7981-wo-firmware
+  KERNEL_IN_UBI := 1
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  IMAGE_SIZE := 65536k
+  IMAGES += factory.bin
+  IMAGE/factory.bin := append-ubi | check-size $$(IMAGE_SIZE)
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef
+TARGET_DEVICES += zbtlink_zbt-z8103ax
 
 define Device/zyxel_ex5601-t0-stock
   DEVICE_VENDOR := Zyxel
