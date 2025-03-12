@@ -13,6 +13,7 @@ mediatek_setup_interfaces()
 	cmcc,rax3000m|\
 	cmcc,rax3000m-emmc-ubootmod|\
 	cmcc,rax3000m-nand-ubootmod|\
+	cmcc,rax3000me|\
 	h3c,magic-nx30-pro|\
 	h3c,magic-nx30-pro-nmbm|\
 	imou,lc-hx3001|\
@@ -32,6 +33,7 @@ mediatek_setup_interfaces()
 	cetron,ct3003-stock|\
 	cetron,ct3003-ubootmod|\
 	cmcc,a10|\
+	cmcc,a10-stock|\
 	cmcc,a10-ubootmod|\
 	confiabits,mt7981|\
 	cudy,wr3000-v1|\
