@@ -9,4 +9,4 @@ src-git telephony https://github.com/openwrt/telephony.git;openwrt-23.05
 #src-git kiddin9 https://github.com/kiddin9/openwrt-packages.git
 #src-git kenzok8 https://github.com/kenzok8/openwrt-packages.git
 src-git smpackage https://github.com/kenzok8/small-package.git
-src-git mtk https://git01.mediatek.com/openwrt/feeds/mtk-openwrt-feeds
+#src-git mtk https://git01.mediatek.com/openwrt/feeds/mtk-openwrt-feeds
