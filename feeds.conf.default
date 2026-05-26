@@ -1,7 +1,7 @@
 src-git passwall_packages https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git;main
 src-git passwall_luci https://github.com/Openwrt-Passwall/openwrt-passwall.git;main
 src-git passwall2_luci https://github.com/Openwrt-Passwall/openwrt-passwall2.git;main
-src-git tailscale https://github.com/whzhni1/luci-app-tailscale.git
+#src-git tailscale https://github.com/whzhni1/luci-app-tailscale.git
 src-git OAF https://github.com/destan19/OpenAppFilter.git
 src-git packages https://github.com/immortalwrt/packages.git;openwrt-25.12
 src-git luci https://github.com/immortalwrt/luci.git;openwrt-25.12
